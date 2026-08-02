@@ -1,0 +1,2 @@
+-- INSERT INTO member
+--    VALUES ('hong', '홍길동', '1111');

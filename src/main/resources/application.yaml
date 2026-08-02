@@ -1,3 +1,17 @@
 spring:
   application:
     name: board
+
+  datasource:
+    # postgresql을 사용할 것이고 ://주소/port번호/DB이름
+    url: jdbc:postgresql://localhost:5432/board
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1111
+  sql:
+    init:
+      mode: never
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
