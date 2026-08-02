@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     private final MemberService memberService;
 
-    @GetMapping("/member")
+    @PostMapping("/member")
     public String findById(@RequestParam String id, Model model) {
 //        Member member = memberService.findById(id);
 //        System.out.println(member);
@@ -22,4 +23,5 @@ public class UserController {
 
         return "member";
     }
+
 }
