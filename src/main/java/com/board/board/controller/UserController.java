@@ -16,11 +16,7 @@ public class UserController {
 
     @PostMapping("/member")
     public String findById(@RequestParam String id, Model model) {
-//        Member member = memberService.findById(id);
-//        System.out.println(member);
-
         model.addAttribute("member", memberService.findById(id));
-
         return "member";
     }
 
