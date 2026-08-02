@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,6 +81,9 @@
                 </button>
             </div>
         </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
         <br>
         <button type="submit" class="btn btn-primary w-100">로그인</button>
     </form>
