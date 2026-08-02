@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f6f8;
+            padding: 2rem 1rem;
+        }
+        .signup-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 2.5rem;
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08);
+        }
+        .signup-card h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #2f5bea;
+            border-color: #2f5bea;
+        }
+        .btn-primary:hover {
+            background-color: #2447c0;
+            border-color: #2447c0;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 0;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .password-toggle:hover {
+            color: #2f5bea;
+        }
+        .form-text.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-card">
+    <h1>회원가입</h1>
+    <form>
+        <div class="mb-3">
+            <label for="username" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="username" placeholder="아이디를 입력하세요">
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <div class="password-wrapper">
+                <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요">
+                <button type="button" class="password-toggle" id="togglePassword">보기</button>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+            <div class="password-wrapper">
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="비밀번호를 다시 입력하세요">
+                <button type="button" class="password-toggle" id="togglePasswordConfirm">보기</button>
+            </div>
+            <div id="passwordMatchMsg" class="form-text"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">가입하기</button>
+    </form>
+    <div class="text-center mt-3">
+        <span class="text-muted small">이미 계정이 있으신가요?</span>
+        <a href="/" class="small text-decoration-none">로그인</a>
+    </div>
+</div>
+
+
+<script>
+    // 비밀번호 보기/숨기기 토글 (공통 함수)
+    function setupToggle(toggleBtnId, inputId) {
+        const toggleBtn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            toggleBtn.textContent = isPassword ? '숨기기' : '보기';
+        });
+    }
+    setupToggle('togglePassword', 'password');
+    setupToggle('togglePasswordConfirm', 'passwordConfirm');
+
+    // 숫자, 영문, 특수문자만 입력 가능
+    const allowedPattern = /[^A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/g;
+    function restrictPasswordInput(inputId) {
+        const input = document.getElementById(inputId);
+        input.addEventListener('input', (e) => {
+            const filtered = e.target.value.replace(allowedPattern, '');
+            if (filtered !== e.target.value) {
+                e.target.value = filtered;
+            }
+            checkPasswordMatch();
+        });
+    }
+    restrictPasswordInput('password');
+    restrictPasswordInput('passwordConfirm');
+
+    // 비밀번호 일치 여부 확인
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('passwordConfirm').value;
+        const msg = document.getElementById('passwordMatchMsg');
+
+        if (passwordConfirm.length === 0) {
+            msg.textContent = '';
+            msg.classList.remove('error');
+            return;
+        }
+        if (password === passwordConfirm) {
+            msg.textContent = '비밀번호가 일치합니다.';
+            msg.classList.remove('error');
+        } else {
+            msg.textContent = '비밀번호가 일치하지 않습니다.';
+            msg.classList.add('error');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -24,4 +24,8 @@ public class UserController {
         return "member";
     }
 
+    @GetMapping("register")
+    public String register() {
+        return "register";
+    }
 }
