@@ -10,4 +10,9 @@ public class BoardController {
     public String login() {
         return "login";
     }
+
+//    @GetMapping("/board")
+//    public String listAll() {
+//        return "list";
+//    }
 }

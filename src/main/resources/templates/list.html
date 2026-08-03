@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>블로그 게시판</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 fw-bold">📋 게시글 목록</h1>
+        <a href="/board/new" class="btn btn-primary">
+            <i class="bi"></i> 새 글쓰기
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                <tr>
+                    <th class="text-center" style="width: 80px;">번호</th>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th class="text-center" style="width: 100px;">수정</th>
+                    <th class="text-center" style="width: 100px;">삭제</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="p : ${board}">
+                    <td class="text-center" th:text="${p.id}"></td>
+                    <td th:text="${p.title}"></td>
+                    <td class="text-truncate" style="max-width: 300px;" th:text="${p.content}"></td>
+                    <td class="text-center">
+                        <a th:href="@{'/posts/' + ${p.id} + '/edit'}" class="btn btn-sm btn-outline-secondary">
+                            수정
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{'/posts/' + ${p.id} + '/delete'}" class="btn btn-sm btn-outline-danger">
+                            삭제
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(board)}">
+                    <td colspan="5" class="text-center text-muted py-4">등록된 게시글이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 페이징 -->
+    <nav class="mt-4" aria-label="Page navigation" th:if="${totalPages > 0}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/board(page=${currentPage - 1})}">이전</a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/board(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/board(page=${currentPage + 1})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.board.board.controller;
 
 import com.board.board.dto.Member;
+import com.board.board.service.BoardService;
 import com.board.board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class UserController {
     private final MemberService memberService;
+    private final BoardService boardService;
 
     @PostMapping("/member")
     public String findById(@RequestParam String id, @RequestParam String password, Model model) {
@@ -23,8 +25,11 @@ public class UserController {
             return "login";
         }
 
-        model.addAttribute("member", memberService.findById(id));
-        return "member";
+        //model.addAttribute("member", memberService.findById(id));
+        //return "member";
+
+        model.addAttribute("board", boardService.listAll());
+        return "list";
     }
 
     @GetMapping("register")
