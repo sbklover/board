@@ -32,7 +32,7 @@
 
                 <tbody>
                 <tr th:each="p : ${board}">
-                    <td class="text-center" th:text="${p.id}"></td>
+                    <td class="text-center" th:text="${p.no}"></td>
                     <td th:text="${p.title}"></td>
                     <td class="text-truncate" style="max-width: 300px;" th:text="${p.content}"></td>
                     <td class="text-center">

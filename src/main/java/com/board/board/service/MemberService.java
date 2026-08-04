@@ -9,7 +9,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberMapper memberMapper;
+    // 유저 등록
+    public String insertMember(Member member) {
+        memberMapper.insertMember(member);
+        return "redirect:/";
+    }
 
+    // 유저 찾기
     public Member findById(String id) {
         return memberMapper.findById(id);
     }

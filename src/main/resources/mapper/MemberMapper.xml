@@ -4,10 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.board.mapper.MemberMapper">
+    <!-- 유저 검색 -->
     <select id="findById" parameterType="String">
-        SELECT id, name, password
+        SELECT *
         FROM member
         WHERE id = #{id}
     </select>
 
+    <!-- 유저 등록 -->
+    <insert id="insertMember">
+        INSERT INTO member (id, name, password)
+        VALUES (#{id}, #{name}, #{password})
+    </insert>
 </mapper>
