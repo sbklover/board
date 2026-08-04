@@ -74,7 +74,6 @@
         }
     </style>
 </head>
-
 <body>
 
 <div class="signup-card">
@@ -111,6 +110,7 @@
         <div class="mb-3">
             <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
             <div class="password-wrapper">
+                <!-- 확인용 필드는 서버로 보낼 필요 없으니 name 없이 그대로 둡니다 -->
                 <input type="password" class="form-control" id="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" required>
                 <button type="button" class="password-toggle" id="togglePasswordConfirm" aria-label="비밀번호 보기">
                     <svg class="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -163,6 +163,44 @@
     const submitBtn = document.getElementById('submitBtn');
     const passwordMatchMsg = document.getElementById('passwordMatchMsg');
     const idCheckMsg = document.getElementById('idCheckMsg');
+
+    // 아이디 중복 확인 상태 (null: 미확인, true: 사용가능, false: 이미 존재)
+    let idAvailable = null;
+    let idCheckTimer = null;
+
+    async function checkIdDuplicate() {
+        const id = usernameInput.value.trim();
+
+        if (id.length === 0) {
+            idAvailable = null;
+            idCheckMsg.textContent = '';
+            idCheckMsg.classList.remove('error', 'success');
+            checkFormValid();
+            return;
+        }
+
+        try {
+            const res = await fetch(`/check-id?id=${encodeURIComponent(id)}`);
+            const data = await res.json();
+
+            if (data.exists) {
+                idAvailable = false;
+                idCheckMsg.textContent = '이미 아이디가 있습니다.';
+                idCheckMsg.classList.remove('success');
+                idCheckMsg.classList.add('error');
+            } else {
+                idAvailable = true;
+                idCheckMsg.textContent = '';
+                idCheckMsg.classList.remove('error', 'success');
+            }
+        } catch (err) {
+            // 네트워크 오류 시에는 서버 최종 검증에 맡기고 클라이언트에서는 막지 않음
+            idAvailable = null;
+            idCheckMsg.textContent = '';
+        }
+
+        checkFormValid();
+    }
 
     // 입력 중에는 매 타이핑마다 요청하지 않도록 디바운스 처리 (400ms)
     // 아이디 입력: 영문 대소문자, 숫자만 허용

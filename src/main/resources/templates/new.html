@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.tyyleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 글쓰기</title>
+</head>
+<body>
+
+  <form action="/board/new" method="post">
+    <div>
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <br>
+    <label>
+      내용 :
+      <br>
+      <textarea id="content"
+                name="content"
+                rows="8"
+                cols="50"
+                required
+      ></textarea>
+
+    </label>
+
+    <br>
+
+    <button>저장하기</button>
+  </form>
+</body>
+</html>

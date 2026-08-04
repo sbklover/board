@@ -34,12 +34,6 @@ public class MemberController {
         return "register";
     }
 
-//    @PostMapping("/register")
-//    public String insertRegister(Member member) {
-//        memberService.insertMember(member);
-//        return "redirect:/"; // 가입 완료 후 로그인 화면으로
-//    }
-
     @PostMapping("/register")
     public String insertRegister(Member member, Model model) {
         // 아이디 중복 확인

@@ -12,7 +12,10 @@ import java.util.List;
 public class BoardService {
     private final BoardMapper boardMapper;
 
+    // 전체 조회
     public List<Board> listAll() {
         return boardMapper.listAll();
     }
+
+
 }
