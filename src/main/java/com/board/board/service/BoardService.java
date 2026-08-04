@@ -17,5 +17,8 @@ public class BoardService {
         return boardMapper.listAll();
     }
 
-
+    // 글쓰기
+    public void boardWrite(Board board) {
+        boardMapper.boardWrite(board);
+    }
 }
