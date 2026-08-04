@@ -1,32 +1,72 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.tyyleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>새 글쓰기</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>새 글쓰기</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f6f8;
+      padding: 2rem 1rem;
+    }
+    .write-card {
+      width: 100%;
+      max-width: 640px;
+      padding: 2.5rem;
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08);
+    }
+    .write-card h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      text-align: center;
+    }
+    .btn-primary {
+      background-color: #2f5bea;
+      border-color: #2f5bea;
+    }
+    .btn-primary:hover {
+      background-color: #2447c0;
+      border-color: #2447c0;
+    }
+    textarea.form-control {
+      resize: vertical;
+    }
+    .btn-group-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  </style>
 </head>
 <body>
 
+<div class="write-card">
+  <h1>새 글쓰기</h1>
+
   <form action="/board/new" method="post">
-    <div>
-      <label for="title">제목</label>
-      <input type="text" id="title" name="title" required>
+    <div class="mb-3">
+      <label for="title" class="form-label">제목</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required>
     </div>
-    <br>
-    <label>
-      내용 :
-      <br>
-      <textarea id="content"
-                name="content"
-                rows="8"
-                cols="50"
-                required
-      ></textarea>
 
-    </label>
+    <div class="mb-4">
+      <label for="content" class="form-label">내용</label>
+      <textarea class="form-control" id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+    </div>
 
-    <br>
-
-    <button>저장하기</button>
+    <div class="btn-group-actions">
+      <a href="/" class="btn btn-outline-secondary w-50">취소</a>
+      <button type="submit" class="btn btn-primary w-50">저장하기</button>
+    </div>
   </form>
+</div>
+
 </body>
 </html>
