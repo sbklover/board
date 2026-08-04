@@ -69,17 +69,24 @@
         .form-text.success {
             color: #198754;
         }
+        .id-hint {
+            color: #2f5bea;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="signup-card">
     <h1>회원 가입</h1>
 
+    <div th:if="${error}" class="alert alert-danger py-2" role="alert" th:text="${error}"></div>
+
     <form action="/register" method="post" id="signupForm">
         <div class="mb-3">
             <label for="username" class="form-label">아이디</label>
             <input type="text" class="form-control" id="username" name="id" th:value="${member != null ? member.id : ''}" placeholder="아이디를 입력하세요" autofocus required>
+            <div class="form-text id-hint">영문 대소문자와 소문자만 넣어주세요</div>
             <div id="idCheckMsg" class="form-text"></div>
         </div>
 
@@ -104,7 +111,6 @@
         <div class="mb-3">
             <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
             <div class="password-wrapper">
-                <!-- 확인용 필드는 서버로 보낼 필요 없으니 name 없이 그대로 둡니다 -->
                 <input type="password" class="form-control" id="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" required>
                 <button type="button" class="password-toggle" id="togglePasswordConfirm" aria-label="비밀번호 보기">
                     <svg class="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -116,11 +122,9 @@
             <div id="passwordMatchMsg" class="form-text"></div>
         </div>
 
-        <div th:if="${error}" class="alert alert-danger py-2" role="alert" th:text="${error}"></div>
+        <br>
 
-        <br>
         <button type="submit" class="btn btn-primary w-100" id="submitBtn" disabled>가입하기</button>
-        <br>
     </form>
 
     <div class="text-center mt-3">
@@ -160,49 +164,17 @@
     const passwordMatchMsg = document.getElementById('passwordMatchMsg');
     const idCheckMsg = document.getElementById('idCheckMsg');
 
-    // 아이디 중복 확인 상태 (null: 미확인, true: 사용가능, false: 이미 존재)
-    let idAvailable = null;
-    let idCheckTimer = null;
-
-    async function checkIdDuplicate() {
-        const id = usernameInput.value.trim();
-
-        if (id.length === 0) {
-            idAvailable = null;
-            idCheckMsg.textContent = '';
-            idCheckMsg.classList.remove('error', 'success');
-            checkFormValid();
-            return;
-        }
-
-        try {
-            const res = await fetch(`/check-id?id=${encodeURIComponent(id)}`);
-            const data = await res.json();
-
-            if (data.exists) {
-                idAvailable = false;
-                idCheckMsg.textContent = '이미 아이디가 있습니다.';
-                idCheckMsg.classList.remove('success');
-                idCheckMsg.classList.add('error');
-            } else {
-                idAvailable = true;
-                idCheckMsg.textContent = '사용 가능한 아이디입니다.';
-                idCheckMsg.classList.remove('error');
-                idCheckMsg.classList.add('success');
-            }
-        } catch (err) {
-            // 네트워크 오류 시에는 서버 최종 검증에 맡기고 클라이언트에서는 막지 않음
-            idAvailable = null;
-            idCheckMsg.textContent = '';
-        }
-
-        checkFormValid();
-    }
-
     // 입력 중에는 매 타이핑마다 요청하지 않도록 디바운스 처리 (400ms)
-    usernameInput.addEventListener('input', () => {
+    // 아이디 입력: 영문 대소문자, 숫자만 허용
+    const idAllowedPattern = /[^A-Za-z0-9]/g;
+    usernameInput.addEventListener('input', (e) => {
+        const filtered = e.target.value.replace(idAllowedPattern, '');
+        if (filtered !== e.target.value) {
+            e.target.value = filtered;
+        }
+
         idAvailable = null; // 재입력 중에는 이전 확인 결과 무효화
-        idCheckMsg.textContent = '확인 중...';
+        idCheckMsg.textContent = '';
         idCheckMsg.classList.remove('error', 'success');
 
         clearTimeout(idCheckTimer);
