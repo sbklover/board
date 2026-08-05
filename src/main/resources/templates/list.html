@@ -31,23 +31,25 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="p : ${board}">
+                <tr th:each="p : ${boardList}">
                     <td class="text-center" th:text="${p.no}"></td>
                     <td th:text="${p.title}"></td>
                     <td class="text-truncate" style="max-width: 300px;" th:text="${p.content}"></td>
                     <td class="text-center">
-                        <a th:href="@{'/posts/' + ${p.id} + '/edit'}" class="btn btn-sm btn-outline-secondary">
+                        <a th:href="@{'/board/modify/' + ${p.no}}" class="btn btn-sm btn-outline-secondary">
                             수정
                         </a>
                     </td>
                     <td class="text-center">
-                        <a th:href="@{'/posts/' + ${p.id} + '/delete'}" class="btn btn-sm btn-outline-danger">
+                        <a th:href="@{'/board/delete/' + ${p.no}}"
+                           th:attr="onclick=|return confirm('${p.no}번을 삭제하시겠습니까?');|"
+                           class="btn btn-sm btn-outline-danger">
                             삭제
                         </a>
                     </td>
                 </tr>
 
-                <tr th:if="${#lists.isEmpty(board)}">
+                <tr th:if="${#lists.isEmpty(boardList)}">
                     <td colspan="5" class="text-center text-muted py-4">등록된 게시글이 없습니다.</td>
                 </tr>
                 </tbody>
@@ -55,7 +57,7 @@
         </div>
     </div>
 
-    <!-- 페이징 -->
+    <!-- 페이징: 7개 단위로 목록을 나눠 보여줌 -->
     <nav class="mt-4" aria-label="Page navigation" th:if="${totalPages > 0}">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">

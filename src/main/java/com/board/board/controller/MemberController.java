@@ -25,8 +25,7 @@ public class MemberController {
             return "login";
         }
 
-        model.addAttribute("board", boardService.listAll());
-        return "list";
+        return "redirect:/board"; // BoardController의 페이징 목록 화면으로 이동
     }
 
     @GetMapping("/register")

@@ -10,7 +10,7 @@ spring:
     password: 1111
   sql:
     init:
-      mode: always
+      mode: never
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
