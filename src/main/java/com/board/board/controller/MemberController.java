@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final BoardService boardService;
 
     @PostMapping("/member")
     public String findById(@RequestParam String id, @RequestParam String password, Model model) {
-        Member member = memberService.findById(id);
+        Member member = memberService.login(id, password);
 
-        if (member == null || !member.getPassword().equals(password)) {
+        if (member == null) {
             model.addAttribute("error", "아이디 또는 비밀번호가 틀립니다.");
             return "login";
         }
@@ -37,6 +36,7 @@ public class MemberController {
     public String insertRegister(Member member, Model model) {
         // 아이디 중복 확인
         Member existing = memberService.findById(member.getId());
+
         if (existing != null) {
             model.addAttribute("error", "이미 사용 중인 아이디입니다.");
             model.addAttribute("member", member); // 입력값 유지용
