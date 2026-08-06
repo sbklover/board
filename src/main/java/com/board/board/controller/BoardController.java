@@ -25,20 +25,26 @@ public class BoardController {
     // 게시글 목록 화면 (7개씩 페이징, page는 0부터 시작)
     @GetMapping("/board")
     public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
-        if (session.getAttribute("sid") == null) {
+        String id = (String) session.getAttribute("sid");
+        String name = (String) session.getAttribute("sName");
+
+        if (id == null) {
             return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
         }
 
-        int totalPages = boardService.totalPages();
+        int totalPages = boardService.totalPagesById(id);
+
         if (page < 0) {
             page = 0;
         } else if (totalPages > 0 && page > totalPages - 1) {
             page = totalPages - 1;
         }
 
-        model.addAttribute("boardList", boardService.listPaged(page));
+        model.addAttribute("boardList", boardService.listPagedById(id, page));
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("name", name);
+
         return "list"; // templates/list.html
     }
 
@@ -58,6 +64,9 @@ public class BoardController {
         if (session.getAttribute("sid") == null) {
             return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
         }
+
+        // 세션 id를 저장
+        board.setId((String) session.getAttribute("sid"));
 
         boardService.InsertBoard(board);
         return "redirect:/board";

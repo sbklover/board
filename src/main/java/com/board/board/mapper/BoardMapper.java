@@ -28,4 +28,10 @@ public interface BoardMapper {
 
     // 단건 조회 (수정 폼에 기존 데이터 채울 때 사용)
     Board boardView(@Param("no") Long no);
+
+    // 해당 ID 페이지 조회
+    List<Board> boardListPagedById(@Param("id") String id, @Param("offset") int offset, @Param("size") int size);
+
+    // 해당 ID 건수
+    int countById(@Param("id") String id);
 }

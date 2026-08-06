@@ -25,7 +25,12 @@ public class MemberController {
             return "login";
         }
 
+        // ID 세션에 저장
         session.setAttribute("sid", id);
+
+        // 유저 이름 저장
+        String sName = member.getName();
+        session.setAttribute("sName", sName);
 
         return "redirect:/board"; // BoardController의 페이징 목록 화면으로 이동
     }
