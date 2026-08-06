@@ -57,21 +57,24 @@
         </div>
     </div>
 
-    <!-- 페이징: 7개 단위로 목록을 나눠 보여줌 -->
-    <nav class="mt-4" aria-label="Page navigation" th:if="${totalPages > 0}">
+    <!-- 페이징: 10개 단위로 페이지 그룹을 나눠 보여줌 -->
+    <nav class="mt-4" aria-label="Page navigation" th:if="${totalPages > 0}"
+         th:with="pageGroupSize=10,
+                   startPage=${(currentPage / pageGroupSize) * pageGroupSize},
+                   endPage=${(startPage + pageGroupSize - 1) < (totalPages - 1) ? (startPage + pageGroupSize - 1) : (totalPages - 1)}">
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/board(page=${currentPage - 1})}">이전</a>
+            <li class="page-item" th:if="${startPage > 0}">
+                <a class="page-link" th:href="@{/board(page=${startPage - pageGroupSize})}"><</a>
             </li>
 
             <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:each="i : ${#numbers.sequence(startPage, endPage)}"
                 th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link" th:href="@{/board(page=${i})}" th:text="${i + 1}"></a>
             </li>
 
-            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/board(page=${currentPage + 1})}">다음</a>
+            <li class="page-item" th:if="${(startPage + pageGroupSize) < totalPages}">
+                <a class="page-link" th:href="@{/board(page=${startPage + pageGroupSize})}">></a>
             </li>
         </ul>
     </nav>

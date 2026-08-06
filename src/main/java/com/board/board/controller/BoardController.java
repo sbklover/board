@@ -2,6 +2,7 @@ package com.board.board.controller;
 
 import com.board.board.dto.Board;
 import com.board.board.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +24,11 @@ public class BoardController {
 
     // 게시글 목록 화면 (7개씩 페이징, page는 0부터 시작)
     @GetMapping("/board")
-    public String list(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         int totalPages = boardService.totalPages();
         if (page < 0) {
             page = 0;
@@ -39,20 +44,32 @@ public class BoardController {
 
     // 새 글쓰기 폼 화면
     @GetMapping("/board/new")
-    public String newForm() {
+    public String newForm(HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         return "new"; // templates/new.html
     }
 
     // 새 글쓰기 폼 제출 처리
     @PostMapping("/board/new")
-    public String write(Board board) {
+    public String write(Board board, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         boardService.InsertBoard(board);
         return "redirect:/board";
     }
 
     // 글 수정 폼 화면 (기존 데이터 채워서 보여줌)
     @GetMapping("/board/modify/{no}")
-    public String modifyForm(@PathVariable("no") Long no, Model model) {
+    public String modifyForm(@PathVariable("no") Long no, Model model, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         Board board = boardService.boardView(no);
         model.addAttribute("board", board);
         return "modify"; // templates/modify.html
@@ -60,14 +77,22 @@ public class BoardController {
 
     // 글 수정 폼 제출 처리
     @PostMapping("/board/modify")
-    public String modify(Board board) {
+    public String modify(Board board, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         boardService.boardModify(board);
         return "redirect:/board"; // 저장 후 목록으로 이동하며 최신 데이터 재조회
     }
 
     // 글 삭제 처리
     @GetMapping("/board/delete/{no}")
-    public String delete(@PathVariable("no") Long no) {
+    public String delete(@PathVariable("no") Long no, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         boardService.boardDelete(no);
         return "redirect:/board";
     }

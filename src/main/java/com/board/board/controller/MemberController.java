@@ -3,6 +3,7 @@ package com.board.board.controller;
 import com.board.board.dto.Member;
 import com.board.board.service.BoardService;
 import com.board.board.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/member")
-    public String findById(@RequestParam String id, @RequestParam String password, Model model) {
+    public String findById(@RequestParam String id, @RequestParam String password, Model model, HttpSession session) {
         Member member = memberService.login(id, password);
 
         if (member == null) {
@@ -24,16 +25,26 @@ public class MemberController {
             return "login";
         }
 
+        session.setAttribute("sid", id);
+
         return "redirect:/board"; // BoardController의 페이징 목록 화면으로 이동
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         return "register";
     }
 
     @PostMapping("/register")
-    public String insertRegister(Member member, Model model) {
+    public String insertRegister(Member member, Model model, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
         // 아이디 중복 확인
         Member existing = memberService.findById(member.getId());
 
