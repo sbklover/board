@@ -31,20 +31,12 @@ public class MemberController {
     }
 
     @GetMapping("/register")
-    public String register(HttpSession session) {
-        if (session.getAttribute("sid") == null) {
-            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
-        }
-
+    public String register() {
         return "register";
     }
 
     @PostMapping("/register")
-    public String insertRegister(Member member, Model model, HttpSession session) {
-        if (session.getAttribute("sid") == null) {
-            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
-        }
-
+    public String insertRegister(Member member, Model model) {
         // 아이디 중복 확인
         Member existing = memberService.findById(member.getId());
 
@@ -55,6 +47,12 @@ public class MemberController {
         }
 
         memberService.insertMember(member);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 완전 무효화 (sid 포함 모든 세션 데이터 제거)
         return "redirect:/";
     }
 }
