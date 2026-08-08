@@ -1,45 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>글 수정</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>글 수정</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
 
-  <body class="bg-light">
-    <div class="container py-5">
+<body class="bg-light">
+<div class="container py-5">
 
-      <div class="mx-auto" style="max-width: 640px;">
-        <h1 class="h3 mb-4 fw-bold text-center">✏️ 글 수정</h1>
+  <div class="mx-auto" style="max-width: 640px;">
+    <h1 class="h3 mb-4 fw-bold text-center">✏️ 글 수정</h1>
 
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
-            <form action="/board/modify" method="post">
-              <!-- 어떤 글을 수정하는지 식별하기 위한 no값 (화면에는 노출하지 않음) -->
-              <input type="hidden" name="no" th:value="${board.no}">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <form action="/board/modify" method="post">
+          <!-- 어떤 글을 수정하는지 식별하기 위한 no값 (화면에는 노출하지 않음) -->
+          <input type="hidden" name="no" th:value="${board.no}">
 
-              <div class="mb-3">
-                <label for="title" class="form-label">제목</label>
-                <input type="text" class="form-control" id="title" name="title"
-                       th:value="${board.title}" placeholder="제목을 입력하세요" autofocus required>
-              </div>
-
-              <div class="mb-4">
-                <label for="content" class="form-label">내용</label>
-                <textarea class="form-control" id="content" name="content" rows="10"
-                          placeholder="내용을 입력하세요" required th:text="${board.content}"></textarea>
-              </div>
-
-              <div class="d-flex gap-2">
-                <button type="button" class="btn btn-outline-secondary w-50" onclick="location.href='/board'">취소</button>
-                <button type="submit" class="btn btn-primary w-50">저장하기</button>
-              </div>
-            </form>
+          <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" name="title"
+                   th:value="${board.title}" placeholder="제목을 입력하세요" autofocus required>
           </div>
-        </div>
+
+          <div class="mb-4">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" name="content" rows="10"
+                      placeholder="내용을 입력하세요" required th:text="${board.content}"></textarea>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary w-50" id="btnCancel"
+                    th:attr="data-no=${board.no}">취소</button>
+            <button type="submit" class="btn btn-primary w-50">저장하기</button>
+          </div>
+        </form>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  </body>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+  // 어디서 수정 화면으로 들어왔는지에 따라 취소 버튼 목적지를 분기
+  // - view.html에서 들어온 경우 -> view.html로 복귀
+  // - list.html(목록)에서 들어온 경우 -> list.html로 복귀
+  document.getElementById('btnCancel').addEventListener('click', function () {
+    var boardNo = this.dataset.no;
+    var ref = document.referrer;
+
+    if (ref && ref.indexOf('/board/view/') !== -1 && boardNo) {
+      location.href = '/board/view/' + boardNo;
+    } else {
+      location.href = '/board';
+    }
+  });
+</script>
+</body>
 </html>
