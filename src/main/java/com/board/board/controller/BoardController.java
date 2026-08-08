@@ -22,6 +22,18 @@ public class BoardController {
         return "login";
     }
 
+    // 글 상세 조회 화면
+    @GetMapping("/board/view/{no}")
+    public String view(@PathVariable("no") Long no, Model model, HttpSession session) {
+        if (session.getAttribute("sid") == null) {
+            return "redirect:/"; // 로그인 안 된 경우 로그인 화면으로
+        }
+
+        Board board = boardService.boardView(no);
+        model.addAttribute("board", board);
+        return "view"; // templates/view.html
+    }
+
     // 게시글 목록 화면 (7개씩 페이징, page는 0부터 시작)
     @GetMapping("/board")
     public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
